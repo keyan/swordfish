@@ -1,4 +1,4 @@
-var board, game = new Chess();
+var game = new Chess();
 
 var player = {
   'w': human,
@@ -42,7 +42,3 @@ $(function() {
 $('#board').on('moveDone', function() {
   player[game.turn()]();
 });
-
-var human = function () {
-  return null
-}
