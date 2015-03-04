@@ -1,7 +1,7 @@
 var board, game = new Chess();
 
 var player = {
-  'w': engine,
+  'w': human,
   'b': engine,
 };
 
@@ -27,7 +27,7 @@ var onSnapEnd = function() {
 };
 
 var config = {
-  draggable: false,
+  draggable: true,
   position: 'start',
   onDragStart: onDragStart,
   onDrop: onDrop,
