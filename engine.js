@@ -1,3 +1,4 @@
+// Piece and mobility weights for evaulation function.
 var kingWt = 200;
 var queenWt = 9;
 var rookWt = 5;
@@ -6,25 +7,47 @@ var bishopWt = 3;
 var pawnWt = 1;
 var mobilityWt = 0.1;
 
+// Implements at replaceAt function to change a char at specific index.
 function stringReplaceAt(s, index, replacement) {
     return s.substr(0, index) + replacement + s.substr(index+1, s.length);
 }
 
+// Check to see if computer should move, if yes find/make the move, update the
+// board and callback.
 function engine() {
   if (game.game_over()) {
     return false;
   }
 
   var move = think();
-
   game.move(move);
   board.position(game.fen());
   window.setTimeout(
     function() {$('#board').trigger('moveDone')}, 500
   );
-};
+}
 
-var evaluate = function (gameState) {
+// Wrapper for search and evaulate.
+// TODO: remove hardcoded initial score, find suitable alternative
+function think(){
+    var possibleMoves = game.moves();
+    var bestMove = 9999;
+    for (var x = 0; x < possibleMoves.length; x++){
+        var currentGame = new Chess(game.fen());
+        currentGame.move(possibleMoves[x]);
+        var currentMove = evaluate(currentGame);
+        if (currentMove < bestMove) {
+            bestMove = currentMove;
+        }
+    }
+    return bestMove;
+}
+
+function search () {
+    return null
+}
+
+function evaluate(gameState) {
     var possibleMoves = gameState.moves();
     var fen = gameState.fen();
 
@@ -48,11 +71,11 @@ var evaluate = function (gameState) {
         currentChar = fen.charAt(x);
         if (currentChar === ' ') {
             break;
-        };
+        } 
         if (currentChar in piecesMap) {
             piecesMap[currentChar] += 1;
-        };
-    };
+        }
+    }
 
     var materialScore = (
         kingWt * (piecesMap['K'] - piecesMap['k']) +
@@ -79,24 +102,5 @@ var evaluate = function (gameState) {
 
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
 
-    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1: -1);
-};
-
-var search = function () {
-    return null
-};
-
-function think(){
-    var possibleMoves = game.moves();
-    var bestMove = 9999;
-    for (var x = 0; x < possibleMoves.length; x++){
-        var currentGame = jQuery.extend(true, {}, game);
-        currentGame.move(possibleMoves[x]);
-        var currentMove = evaluate(currentGame);
-        if (currentMove < bestMove) {
-            bestMove = currentMove;
-        }
-    }
-
-    return bestMove;
-};
+    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1:-1);
+}
