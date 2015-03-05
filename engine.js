@@ -19,7 +19,7 @@ function engine() {
     return false;
   }
 
-  var move = think();
+  var move = think()['move'];
   game.move(move);
   board.position(game.fen());
   window.setTimeout(
@@ -31,13 +31,19 @@ function engine() {
 // TODO: remove hardcoded initial score, find suitable alternative
 function think(){
     var possibleMoves = game.moves();
-    var bestMove = 9999;
+    var bestMove = {
+        'move': null,
+        'score': 9999,
+    };
+
     for (var x = 0; x < possibleMoves.length; x++){
         var currentGame = new Chess(game.fen());
-        currentGame.move(possibleMoves[x]);
-        var currentMove = evaluate(currentGame);
-        if (currentMove < bestMove) {
-            bestMove = currentMove;
+        var currentMove = possibleMoves[x]
+        currentGame.move(currentMove);
+        var currentMoveScore = evaluate(currentGame);
+        if (currentMoveScore < bestMove['score']) {
+            bestMove['move'] = currentMove;
+            bestMove['score'] = currentMoveScore;
         }
     }
     return bestMove;
@@ -50,7 +56,6 @@ function search () {
 function evaluate(gameState) {
     var possibleMoves = gameState.moves();
     var fen = gameState.fen();
-
     var currentChar;
     var piecesMap = {
         'p': 0,
@@ -99,7 +104,6 @@ function evaluate(gameState) {
         whiteMobility = oppositeGame.moves().length;
         blackMobility = gameState.moves().length;
     }
-
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
 
     return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1:-1);
