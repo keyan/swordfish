@@ -19,8 +19,12 @@ function engine() {
     return false;
   }
 
-  var move = think()['move'];
-  game.move(move);
+  var move = think();
+  console.log("Current Player: " + game.turn());
+  console.log("Best move: " + move['move']);
+  console.log("Best score: " + move['score']);
+  console.log("-----------------------");
+  game.move(move['move']);
   board.position(game.fen());
   window.setTimeout(
     function() {$('#board').trigger('moveDone')}, 2000
@@ -33,31 +37,49 @@ function think(){
     var possibleMoves = game.moves();
     var bestMove = {
         'move': null,
-        'score': (game.turn() === 'w' ? -9999:9999),
+        'score': -Infinity,
     };
+
+    var moves = [];
 
     for (var x = 0; x < possibleMoves.length; x++){
         var currentGame = new Chess(game.fen());
         var currentMove = possibleMoves[x]
         currentGame.move(currentMove);
         var currentMoveScore = evaluate(currentGame);
-        if (game.turn() == 'b') {
-            if (currentMoveScore < bestMove['score']) {
+        moves.push(currentMove + ' ' + currentMoveScore);
+        if (currentMoveScore > bestMove['score']) {
                 bestMove['move'] = currentMove;
                 bestMove['score'] = currentMoveScore;
-            }
-        } else if (game.turn() == 'w') {
-            if (currentMoveScore > bestMove['score']) {
-                bestMove['move'] = currentMove;
-                bestMove['score'] = currentMoveScore;
-            }
         }
     }
+    console.log(moves);
     return bestMove;
 }
 
 function search () {
-    return null
+
+}
+
+function negaMax (state, depth) {
+    if (depth == 0) {
+        return evauluate(state);
+    }
+    var posssibleMoves = state.moves();
+    var bestMove = {
+        'move': null,
+        'score': -Infinity,
+    };
+    for (var x = 0; x < possibleMoves; x++) {
+        var currentGame = new Chess(state.fen())
+        currentGame.move(possibleMoves[x]);
+        var move = -negaMax(currentGame, depth-1);
+        if (move['score'] > bestMove['score']) {
+            bestMove['move'] = move['move'];
+            bestMove['score'] = move['score'];
+        }
+    }
+    return bestMove;
 }
 
 function evaluate(gameState) {
@@ -99,8 +121,9 @@ function evaluate(gameState) {
     );
 
     var turnCharIndex = fen.indexOf(' ') + 1;
+    console.log(game.turn());
 
-    if (fen.charAt(turnCharIndex) === 'w') {
+    if (game.turn() === 'w') {
         fen = stringReplaceAt(fen, turnCharIndex, 'b');
         var oppositeGame = new Chess(fen);
         whiteMobility = gameState.moves().length;
@@ -113,5 +136,5 @@ function evaluate(gameState) {
     }
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
 
-    return (materialScore + mobilityScore);
+    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1:-1);
 }
