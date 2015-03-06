@@ -42,7 +42,7 @@ function think(){
 
     var moves = [];
 
-    for (var x = 0; x < possibleMoves.length; x++){
+    for (var x = 0; x < possibleMoves.length; x++) {
         var currentGame = new Chess(game.fen());
         var currentMove = possibleMoves[x]
         currentGame.move(currentMove);
@@ -83,7 +83,6 @@ function negaMax (state, depth) {
 }
 
 function evaluate(gameState) {
-    var possibleMoves = gameState.moves();
     var fen = gameState.fen();
     var currentChar;
     var piecesMap = {
@@ -121,20 +120,19 @@ function evaluate(gameState) {
     );
 
     var turnCharIndex = fen.indexOf(' ') + 1;
-    console.log(game.turn());
+    console.log(fen);
 
-    if (game.turn() === 'w') {
-        fen = stringReplaceAt(fen, turnCharIndex, 'b');
-        var oppositeGame = new Chess(fen);
-        whiteMobility = gameState.moves().length;
-        blackMobility = oppositeGame.moves().length;
-    } else {
+    if (gameState.turn() === 'b') {
         fen = stringReplaceAt(fen, turnCharIndex, 'w');
         var oppositeGame = new Chess(fen);
-        whiteMobility = oppositeGame.moves().length;
         blackMobility = gameState.moves().length;
+        whiteMobility = oppositeGame.moves().length;
+    } else {
+        fen = stringReplaceAt(fen, turnCharIndex, 'b');
+        var oppositeGame = new Chess(fen);
+        blackMobility = oppositeGame.moves().length;
+        whiteMobility = gameState.moves().length;
     }
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
-
-    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1:-1);
+    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? -1:1);
 }
