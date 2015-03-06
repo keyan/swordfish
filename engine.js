@@ -23,7 +23,7 @@ function engine() {
   game.move(move);
   board.position(game.fen());
   window.setTimeout(
-    function() {$('#board').trigger('moveDone')}, 10000
+    function() {$('#board').trigger('moveDone')}, 2000
   );
 }
 
@@ -41,7 +41,6 @@ function think(){
         var currentMove = possibleMoves[x]
         currentGame.move(currentMove);
         var currentMoveScore = evaluate(currentGame);
-        console.log(currentMoveScore, possibleMoves[x]);
         if (game.turn() == 'b') {
             if (currentMoveScore < bestMove['score']) {
                 bestMove['move'] = currentMove;
@@ -54,7 +53,6 @@ function think(){
             }
         }
     }
-    console.log('----------------------------');
     return bestMove;
 }
 
@@ -115,5 +113,5 @@ function evaluate(gameState) {
     }
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
 
-    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? 1:-1);
+    return (materialScore + mobilityScore);
 }
