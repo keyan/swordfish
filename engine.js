@@ -20,73 +20,63 @@ function engine() {
   }
 
   var move = think();
-  console.log("Current Player: " + game.turn());
-  console.log("Best move: " + move['move']);
-  console.log("Best score: " + move['score']);
-  console.log("-----------------------");
-  game.move(move['move']);
+  game.move(move);
   board.position(game.fen());
   window.setTimeout(
     function() {$('#board').trigger('moveDone')}, 2000
   );
 }
 
-// Wrapper for search and evaulate.
+// Wrapper for search and evaluate.
 // TODO: remove hardcoded initial scores, find suitable alternative.
 function think(){
-    var possibleMoves = game.moves();
-    var bestMove = {
-        'move': null,
-        'score': -Infinity,
-    };
-
-    var moves = [];
-
-    for (var x = 0; x < possibleMoves.length; x++) {
-        var currentGame = new Chess(game.fen());
-        var currentMove = possibleMoves[x]
-        currentGame.move(currentMove);
-        var currentMoveScore = evaluate(currentGame);
-        moves.push(currentMove + ' ' + currentMoveScore);
-        if (currentMoveScore > bestMove['score']) {
-                bestMove['move'] = currentMove;
-                bestMove['score'] = currentMoveScore;
-        }
-    }
-    console.log(moves);
-    return bestMove;
-}
-
-function search () {
-
+    return negaMax(game, 4);
 }
 
 function negaMax (state, depth) {
-    if (depth == 0) {
-        return evauluate(state);
-    }
-    var posssibleMoves = state.moves();
     var bestMove = {
         'move': null,
         'score': -Infinity,
     };
-    for (var x = 0; x < possibleMoves; x++) {
+    var possibleMoves = state.moves();
+
+    for (var x = 0; x < possibleMoves.length; x++) {
         var currentGame = new Chess(state.fen())
         currentGame.move(possibleMoves[x]);
-        var move = -negaMax(currentGame, depth-1);
-        if (move['score'] > bestMove['score']) {
-            bestMove['move'] = move['move'];
-            bestMove['score'] = move['score'];
+        var score = -negaMaxRecur(currentGame, depth-1);
+        if (score > bestMove['score']) {
+            bestMove['move'] = possibleMoves[x];
+            bestMove['score'] = score;
         }
     }
+    return bestMove['move'];
+}
+
+
+function negaMaxRecur (state, depth) {
+    var bestMove = -Infinity;
+    if (depth === 0) {
+        return evaluate(state);
+    }
+    var possibleMoves = state.moves();
+
+    for (var x = 0; x < possibleMoves.length; x++) {
+        var currentGame = new Chess(state.fen())
+        currentGame.move(possibleMoves[x]);
+        var move = -negaMaxRecur(currentGame, depth-1);
+        if (move > bestMove) {
+            bestMove = move;
+        }
+    }
+    console.log(bestMove);
     return bestMove;
 }
 
 function flipPlayer(player) {
     if (player === 'w') {
-        return 'b'
+        return 'b';
     } else if (player === 'b') {
-        return 'w'
+        return 'w';
     }
 }
 
@@ -96,11 +86,11 @@ function evaluate(oppositeGame) {
     var oppositePlayer = oppositeFen[oppositeCharIndex];
     var currentPlayer = flipPlayer(oppositePlayer);
 
-    var currentFen = stringReplaceAt(oppositeFen, oppositeCharIndex, currentPlayer);
+    var currentFen = stringReplaceAt(oppositeFen,
+                                     oppositeCharIndex,
+                                     currentPlayer);
     
     var currentGame = new Chess(currentFen);
-
-    
     var currentChar;
     var piecesMap = {
         'p': 0,
@@ -127,7 +117,6 @@ function evaluate(oppositeGame) {
         }
     }
 
-    
     var materialScore = (
           kingWt * (piecesMap['K'] - piecesMap['k'])
         + queenWt * (piecesMap['Q'] - piecesMap['q'])
@@ -144,6 +133,7 @@ function evaluate(oppositeGame) {
         whiteMobility = oppositeGame.moves().length;
         blackMobility = currentGame.moves().length;
     }
+
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
     return (materialScore + mobilityScore) * (currentPlayer === 'w' ? 1:-1);
 }
