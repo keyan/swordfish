@@ -3,7 +3,7 @@ var game = new Chess();
 // Defines who/what is playing for each color.
 // TODO instead of human/engine use a variable from the HTML page.
 var player = {
-  'w': human,
+  'w': engine,
   'b': engine,
 };
 
@@ -27,7 +27,9 @@ function onDrop(source, target) {
 
 function onSnapEnd() {
   board.position(game.fen());
-  $('#board').trigger('moveDone');
+  window.setTimeout(
+    function() {$('#board').trigger('moveDone')}, 500
+  );
 }
 
 var config = {
@@ -36,6 +38,10 @@ var config = {
   onDragStart: onDragStart,
   onDrop: onDrop,
   onSnapEnd: onSnapEnd,
+  moveSpeed: 'slow',
+  snapSpeed: 'fast',
+  appearSpeed: 'slow',
+  trashSpeed: 'fast',
 };
 
 // Make the chessboard and initialize gameplay upon loading the DOM.

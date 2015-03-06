@@ -23,17 +23,17 @@ function engine() {
   game.move(move);
   board.position(game.fen());
   window.setTimeout(
-    function() {$('#board').trigger('moveDone')}, 500
+    function() {$('#board').trigger('moveDone')}, 10000
   );
 }
 
 // Wrapper for search and evaulate.
-// TODO: remove hardcoded initial score, find suitable alternative
+// TODO: remove hardcoded initial scores, find suitable alternative.
 function think(){
     var possibleMoves = game.moves();
     var bestMove = {
         'move': null,
-        'score': 9999,
+        'score': (game.turn() === 'w' ? -9999:9999),
     };
 
     for (var x = 0; x < possibleMoves.length; x++){
@@ -41,11 +41,20 @@ function think(){
         var currentMove = possibleMoves[x]
         currentGame.move(currentMove);
         var currentMoveScore = evaluate(currentGame);
-        if (currentMoveScore < bestMove['score']) {
-            bestMove['move'] = currentMove;
-            bestMove['score'] = currentMoveScore;
+        console.log(currentMoveScore, possibleMoves[x]);
+        if (game.turn() == 'b') {
+            if (currentMoveScore < bestMove['score']) {
+                bestMove['move'] = currentMove;
+                bestMove['score'] = currentMoveScore;
+            }
+        } else if (game.turn() == 'w') {
+            if (currentMoveScore > bestMove['score']) {
+                bestMove['move'] = currentMove;
+                bestMove['score'] = currentMoveScore;
+            }
         }
     }
+    console.log('----------------------------');
     return bestMove;
 }
 
@@ -83,12 +92,12 @@ function evaluate(gameState) {
     }
 
     var materialScore = (
-        kingWt * (piecesMap['K'] - piecesMap['k']) +
-        queenWt * (piecesMap['Q'] - piecesMap['q']) +
-        rookWt * (piecesMap['R'] - piecesMap['r']) +
-        bishopWt * (piecesMap['B'] - piecesMap['b']) +
-        knightWt * (piecesMap['N'] - piecesMap['n']) +
-        pawnWt * (piecesMap['P'] - piecesMap['p'])
+          kingWt * (piecesMap['K'] - piecesMap['k'])
+        + queenWt * (piecesMap['Q'] - piecesMap['q'])
+        + rookWt * (piecesMap['R'] - piecesMap['r'])
+        + bishopWt * (piecesMap['B'] - piecesMap['b'])
+        + knightWt * (piecesMap['N'] - piecesMap['n'])
+        + pawnWt * (piecesMap['P'] - piecesMap['p'])
     );
 
     var turnCharIndex = fen.indexOf(' ') + 1;
