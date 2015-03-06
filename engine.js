@@ -82,8 +82,25 @@ function negaMax (state, depth) {
     return bestMove;
 }
 
-function evaluate(gameState) {
-    var fen = gameState.fen();
+function flipPlayer(player) {
+    if (player === 'w') {
+        return 'b'
+    } else if (player === 'b') {
+        return 'w'
+    }
+}
+
+function evaluate(oppositeGame) {
+    oppositeFen = oppositeGame.fen();
+    var oppositeCharIndex = oppositeFen.indexOf(' ') + 1;
+    var oppositePlayer = oppositeFen[oppositeCharIndex];
+    var currentPlayer = flipPlayer(oppositePlayer);
+
+    var currentFen = stringReplaceAt(oppositeFen, oppositeCharIndex, currentPlayer);
+    
+    var currentGame = new Chess(currentFen);
+
+    
     var currentChar;
     var piecesMap = {
         'p': 0,
@@ -100,8 +117,8 @@ function evaluate(gameState) {
         'K': 0,
     };
 
-    for (var x = 0; x < fen.length; x++) {
-        currentChar = fen.charAt(x);
+    for (var x = 0; x < currentFen.length; x++) {
+        currentChar = currentFen.charAt(x);
         if (currentChar === ' ') {
             break;
         } 
@@ -110,6 +127,7 @@ function evaluate(gameState) {
         }
     }
 
+    
     var materialScore = (
           kingWt * (piecesMap['K'] - piecesMap['k'])
         + queenWt * (piecesMap['Q'] - piecesMap['q'])
@@ -119,20 +137,13 @@ function evaluate(gameState) {
         + pawnWt * (piecesMap['P'] - piecesMap['p'])
     );
 
-    var turnCharIndex = fen.indexOf(' ') + 1;
-    console.log(fen);
-
-    if (gameState.turn() === 'b') {
-        fen = stringReplaceAt(fen, turnCharIndex, 'w');
-        var oppositeGame = new Chess(fen);
-        blackMobility = gameState.moves().length;
-        whiteMobility = oppositeGame.moves().length;
-    } else {
-        fen = stringReplaceAt(fen, turnCharIndex, 'b');
-        var oppositeGame = new Chess(fen);
+    if (currentPlayer === 'w') {
+        whiteMobility = currentGame.moves().length;
         blackMobility = oppositeGame.moves().length;
-        whiteMobility = gameState.moves().length;
+    } else {
+        whiteMobility = oppositeGame.moves().length;
+        blackMobility = currentGame.moves().length;
     }
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
-    return (materialScore + mobilityScore) * (gameState.turn() === 'w' ? -1:1);
+    return (materialScore + mobilityScore) * (currentPlayer === 'w' ? 1:-1);
 }
