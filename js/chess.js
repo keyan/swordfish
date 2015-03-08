@@ -1543,7 +1543,7 @@ var Chess = function(fen) {
 
       return null;
     },
-
+      
     history: function(options) {
       var reversed_history = [];
       var move_history = [];
@@ -1565,7 +1565,15 @@ var Chess = function(fen) {
       }
 
       return move_history;
-    }
+    },
+    flip_turn: function() {
+        if (turn === WHITE) {
+            turn = BLACK
+        } else if (turn === BLACK) {
+            turn = WHITE
+        }
+    },
+      undo_move: undo_move,
 
   };
 };

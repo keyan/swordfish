@@ -30,7 +30,7 @@ function engine() {
 // Wrapper for search and evaluate.
 // TODO: remove hardcoded initial scores, find suitable alternative.
 function think(){
-    return negaMax(game, 4);
+    return negaMax(game, 2);
 }
 
 function negaMax (state, depth) {
@@ -41,9 +41,10 @@ function negaMax (state, depth) {
     var possibleMoves = state.moves();
 
     for (var x = 0; x < possibleMoves.length; x++) {
-        var currentGame = new Chess(state.fen())
-        currentGame.move(possibleMoves[x]);
-        var score = -negaMaxRecur(currentGame, depth-1);
+        state.move(possibleMoves[x]);
+        var score = -negaMaxRecur(state, depth-1);
+        state.undo_move();
+        console.log(possibleMoves[x])
         if (score > bestMove['score']) {
             bestMove['move'] = possibleMoves[x];
             bestMove['score'] = score;
@@ -61,15 +62,14 @@ function negaMaxRecur (state, depth) {
     var possibleMoves = state.moves();
 
     for (var x = 0; x < possibleMoves.length; x++) {
-        var currentGame = new Chess(state.fen())
-        currentGame.move(possibleMoves[x]);
-        var move = -negaMaxRecur(currentGame, depth-1);
+        state.move(possibleMoves[x]);
+        var move = -negaMaxRecur(state, depth-1);
+        state.undo_move();
         if (move > bestMove) {
             bestMove = move;
         }
     }
-    console.log(bestMove);
-    return bestMove;
+      return bestMove;
 }
 
 function flipPlayer(player) {
@@ -80,17 +80,10 @@ function flipPlayer(player) {
     }
 }
 
-function evaluate(oppositeGame) {
-    oppositeFen = oppositeGame.fen();
-    var oppositeCharIndex = oppositeFen.indexOf(' ') + 1;
-    var oppositePlayer = oppositeFen[oppositeCharIndex];
-    var currentPlayer = flipPlayer(oppositePlayer);
-
-    var currentFen = stringReplaceAt(oppositeFen,
-                                     oppositeCharIndex,
-                                     currentPlayer);
-    
-    var currentGame = new Chess(currentFen);
+function evaluate(game) {
+    game.flip_turn()
+    var currentFen = game.fen()
+    currentPlayer = game.turn()
     var currentChar;
     var piecesMap = {
         'p': 0,
@@ -127,12 +120,15 @@ function evaluate(oppositeGame) {
     );
 
     if (currentPlayer === 'w') {
-        whiteMobility = currentGame.moves().length;
-        blackMobility = oppositeGame.moves().length;
+        whiteMobility = game.moves().length;
+        game.flip_turn();
+        blackMobility = game.moves().length;
     } else {
-        whiteMobility = oppositeGame.moves().length;
-        blackMobility = currentGame.moves().length;
+        whiteMobility = game.moves().length;
+        game.flip_turn();
+        blackMobility = game.moves().length;
     }
+
 
     var mobilityScore = mobilityWt * (whiteMobility - blackMobility);
     return (materialScore + mobilityScore) * (currentPlayer === 'w' ? 1:-1);

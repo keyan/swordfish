@@ -10,10 +10,10 @@ var player = {
 // onDragStart/onDrop/onSnapEnd/config are all for Chessboard.js configuration
 // to allow for human gameplay.
 function onDragStart(source, piece, position, orientation) {
-  if (game.in_checkmate() === true || game.in_draw() === true ||
-    piece.search(/^b/) !== -1) {
+  // if (game.in_checkmate() === true || game.in_draw() === true ||
+  //   piece.search(/^b/) !== -1) {
     return false;
-  }
+  // }
 }
 
 function onDrop(source, target) {
@@ -47,7 +47,11 @@ var config = {
 // Make the chessboard and initialize gameplay upon loading the DOM.
 var board = new ChessBoard('board', config);
 $(function() {
-  player[game.turn()]();
+    $('.start').click(function(e) {
+        e.preventDefault();
+        player[game.turn()]();
+    });
+  
 });
 
 // Callback after a move has been made.
