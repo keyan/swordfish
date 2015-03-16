@@ -8,9 +8,8 @@ A chess engine and accompanying user interface written purely in Javascript. Its
 1. Not live yet...
 
 ### Under Construction
-1. Implement search algorithm
-2. Add support for computer vs. computer games
-3. Improve visual UI elements
+1. Likely bug in the evaluation stage?
+2. Improve visual UI elements
 
 
 [chessboard.js]:http://chessboardjs.com/
