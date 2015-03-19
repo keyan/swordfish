@@ -12,8 +12,8 @@ A chess engine and accompanying user interface written purely in Javascript. Its
 2. Improve visual UI elements
 
 ### Authors
-Keyan Pishdadian
-Jon Poler
+-Keyan Pishdadian
+-Jon Poler
 
 [chessboard.js]:http://chessboardjs.com/
 [chess.js]: https://github.com/jhlywa/chess.js
