@@ -5,80 +5,34 @@
    <link rel="stylesheet" href="css/chessboard-0.3.0.css" />
    <link rel="stylesheet" href="css/bootstrap.css" />
    <link rel="stylesheet" href="css/theme.css" />
+	 <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
 </head>
 <body>
-  <script src="js/json3.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/chessboard.js"></script>
-  <script src="js/chess.js"></script>
-
   <center>
     <div id="board" style="width: 400px"></div>
-    <script src="engine.js"></script>
-    <script src="human.js"></script>
-    <script src="game.js"></script>
 
 		<label for="white-select">White Player</label>
-		<select name="white-select">
-			<!-- <option value="human" selected="selected">Human</option> -->
+		<select id="white-select">
+			<option value="human" selected="selected">Human</option>
 			<option value="computer">Computer</option>
 		</select>
-		<!-- <script type="text/javascript"> -->
-		<!-- 	$('#whiteDropdown li').on('click', function(e) { -->
-		<!-- 		selection = e.target.innerText() -->
-		<!-- 		switch selection { -->
-		<!-- 			case "Human": -->
-		<!-- 				whitePlayer = human -->
-		<!-- 				break; -->
-		<!-- 			case "Computer": -->
-		<!-- 				whitePlayer = computer -->
-		<!-- 				break; -->
-		<!-- 		} -->
-		<!-- 	}) -->
-		<!-- </script> -->
 		<br>
 		<label for="black-select">Black Player</label>
-		<select name="black-select">
-			<!-- <option value="human">Human</option> -->
+		<select id="black-select">
+			<option value="human">Human</option>
 			<option value="computer" selected="selected">Computer</option>
 		</select>
-		<!-- <script type="text/javascript"> -->
-		<!-- 	$('#blackDropdown li').on('click', function(e) { -->
-		<!-- 		selection = e.target.innerText() -->
-		<!-- 		switch selection { -->
-		<!-- 			case "Human": -->
-		<!-- 				blackPlayer = human -->
-		<!-- 				break; -->
-		<!-- 			case "Computer": -->
-		<!-- 				blackPlayer = computer -->
-		<!-- 				break; -->
-		<!-- 		} -->
-		<!-- 	}) -->
-		<!-- </script> -->
 		<br>
-    <button class="start">Start</button>
-</center>
+    <button class="start">Play</button>
+	</center>
+
+  <script src="js/libs/json3.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
+  <script src="js/libs/chessboard.js"></script>
+  <script src="js/libs/chess.js"></script>
+	<script src="js/engine.js"></script>
+	<script src="js/human.js"></script>
+	<script src="js/game.js"></script>
 </body>
 </html>
-
-<!-- some code that Martino sketched out, gives a rough idea for how to address
-     data attribute passing for assigning player types.
-
-    //$('.element').data("thing", "value")
-      <select name="white">
-        <option value="human" defualt>human</option>
-        <option value="computer" />
-      </select>
-      <script type="text/javascript">
-        $('#whiteDropdown li').on('click', function(e) {
-          selection = e.target.innerText()
-          swithch selection {
-            case "Human":
-              whitePlayer = human
-              break;
-            case ""
-          }
-        })
-      </script>
- -->
