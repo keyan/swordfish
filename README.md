@@ -1,17 +1,12 @@
 # Swordfish
 A chess engine and accompanying user interface written purely in Javascript. Its aquatic name plays tribute to some of the great engines before it (Rybka, Stockfish, Sunfish). Swordfish uses [chessboard.js] to draw board elements and [chess.js] for move validation.
 
-### Requirements
-- A modern browser
+There are clearly issues with the evaluation logic, but we won't be revisting this project.
 
-### Usage
-1. Not live yet...
+## Usage
+Live demo @ http://keyanp.com/swordfish/index.html
 
-### Under Construction
-1. Likely bug in the evaluation stage?
-2. Improve visual UI elements
-
-### Authors
+## Authors
 - Keyan Pishdadian
 - Jon Poler
 
