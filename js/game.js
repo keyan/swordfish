@@ -42,10 +42,9 @@ var players = assignPlayers();
 // onDragStart/onDrop/onSnapEnd/config are all for Chessboard.js configuration
 // to allow for human gameplay.
 function onDragStart(source, piece, position, orientation) {
-  // if (game.in_checkmate() === true || game.in_draw() === true ||
-  //   piece.search(/^b/) !== -1) {
+  if (game.in_checkmate() === true || game.in_draw() === true) {
     return false;
-  // }
+  }
 }
 
 function onDrop(source, target) {
@@ -70,9 +69,9 @@ var config = {
   onDragStart: onDragStart,
   onDrop: onDrop,
   onSnapEnd: onSnapEnd,
-  moveSpeed: 'slow',
+  moveSpeed: 'fast',
   snapSpeed: 'fast',
-  appearSpeed: 'slow',
+  appearSpeed: 'fast',
   trashSpeed: 'fast',
 };
 
