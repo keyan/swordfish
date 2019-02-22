@@ -19,13 +19,46 @@
     <script src="human.js"></script>
     <script src="game.js"></script>
 
-    <p>Status: <span id="status"></span></p>
-    <p>FEN: <span id="fen"></span></p>
-    <p>PGN: <span id="pgn"></span></p>
+		<label for="white-select">White Player</label>
+		<select name="white-select">
+			<!-- <option value="human" selected="selected">Human</option> -->
+			<option value="computer">Computer</option>
+		</select>
+		<!-- <script type="text/javascript"> -->
+		<!-- 	$('#whiteDropdown li').on('click', function(e) { -->
+		<!-- 		selection = e.target.innerText() -->
+		<!-- 		switch selection { -->
+		<!-- 			case "Human": -->
+		<!-- 				whitePlayer = human -->
+		<!-- 				break; -->
+		<!-- 			case "Computer": -->
+		<!-- 				whitePlayer = computer -->
+		<!-- 				break; -->
+		<!-- 		} -->
+		<!-- 	}) -->
+		<!-- </script> -->
+		<br>
+		<label for="black-select">Black Player</label>
+		<select name="black-select">
+			<!-- <option value="human">Human</option> -->
+			<option value="computer" selected="selected">Computer</option>
+		</select>
+		<!-- <script type="text/javascript"> -->
+		<!-- 	$('#blackDropdown li').on('click', function(e) { -->
+		<!-- 		selection = e.target.innerText() -->
+		<!-- 		switch selection { -->
+		<!-- 			case "Human": -->
+		<!-- 				blackPlayer = human -->
+		<!-- 				break; -->
+		<!-- 			case "Computer": -->
+		<!-- 				blackPlayer = computer -->
+		<!-- 				break; -->
+		<!-- 		} -->
+		<!-- 	}) -->
+		<!-- </script> -->
+		<br>
     <button class="start">Start</button>
 </center>
-
-
 </body>
 </html>
 

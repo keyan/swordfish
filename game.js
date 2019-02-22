@@ -51,7 +51,7 @@ $(function() {
         e.preventDefault();
         player[game.turn()]();
     });
-  
+
 });
 
 // Callback after a move has been made.
